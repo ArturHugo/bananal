@@ -1,0 +1,61 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DistHiperGeoCalculator
+{
+    class Factorial
+    {
+        public double Fact(double num)
+        {
+            double n = num;
+            double numFact = 1;
+            for (int j = 1; j <= n; j++)
+            {
+                numFact *= j;
+            }
+            return numFact;
+        }
+    }
+    class Combination : Factorial
+    {
+        public double Binomial(double firstVar, double secondVar)
+        {
+            Factorial value = new Factorial();
+            double binomialResult = value.Fact(firstVar) / (value.Fact(firstVar - secondVar) * value.Fact(secondVar));
+            return binomialResult;
+        }
+    }
+    class HiperGeoProbability : Combination
+    {
+        public double Probability(double pop, double samp, double fPop, double fPart)
+        {
+            Combination comb = new Combination();
+            double restPop = pop - fPop;
+            double restSamp = samp - fPart;
+            double probability = comb.Binomial(fPop, fPart) * comb.Binomial(restPop, restSamp) / comb.Binomial(pop, samp);
+            return probability;
+        }
+    }
+   
+    class ProbabilityCalculator : HiperGeoProbability
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Enter the size of your population: ");
+            double population = Convert.ToDouble(Console.ReadLine());
+            Console.WriteLine("Enter the number of favorable cases in your population: ");
+            double favCases = Convert.ToDouble(Console.ReadLine());
+            Console.WriteLine("Enter the size of your sample: ");
+            double yourSample = Convert.ToDouble(Console.ReadLine());
+            Console.WriteLine("Enter the number of favorable cases you want to be in your sample: ");
+            double favPartOfSample = Convert.ToDouble(Console.ReadLine());
+            HiperGeoProbability prob = new HiperGeoProbability();
+            double yourProb = prob.Probability(population, yourSample, favCases, favPartOfSample) * 100;
+            Console.WriteLine("Your cahances are: {0}%", yourProb);
+            Console.ReadKey();
+        }
+    }
+}
